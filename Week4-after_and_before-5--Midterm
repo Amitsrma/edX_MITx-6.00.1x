@@ -1,0 +1,139 @@
+#Problem 4
+# Paste your function here
+def closest_power(base, num):
+    '''
+    base: base of the exponential, integer > 1
+    num: number you want to be closest to, integer > 0
+    Find the integer exponent such that base**exponent is closest to num.
+    Note that the base**exponent may be either greater or smaller than num.
+    In case of a tie, return the smaller value.
+    Returns the exponent.
+    '''
+    if num == 1:
+        return 0
+    elif num < 1 or (num > 1 and base > num):
+        '''
+        considering base > 1 or when base is greater then required number,
+        the exponent should reduce the base 
+        '''
+        check = 0
+        while abs(base**check - num)> abs(base**(check-1) - num):
+            check -= 1
+        return check
+    elif num > base:
+        check = 0
+        while abs(base**check - num) > abs(base**(check+1) - num):
+            check += 1
+        return check
+
+
+#Problem 5
+'''
+Write a Python function that returns the sum of the pairwise products of listA and listB. You should assume that listA and listB have the same length and are two lists of integer numbers. For example, if listA = [1, 2, 3] and listB = [4, 5, 6], the dot product is 1*4 + 2*5 + 3*6, meaning your function should return: 32
+'''
+# Paste your function here
+def dotProduct(listA, listB):
+    '''
+    listA: a list of numbers
+    listB: a list of numbers of the same length as listA
+    '''
+    # Your code here
+    addition = 0
+    for i in range(len(listA)):
+        addition += listA[i] * listB[i]
+    return addition
+
+#Problem 6
+'''
+For example, if L = [[1, 2], [3, 4], [5, 6, 7]] then deep_reverse(L) mutates L to be [[7, 6, 5], [4, 3], [2, 1]]
+'''
+def deep_reverse(L):
+    """ assumes L is a list of lists whose elements are ints
+    Mutates L such that it reverses its elements and also 
+    reverses the order of the int elements in every element of L. 
+    It does not return anything.
+    """
+    # Your code here
+    for i in range(len(L)):
+        L[i].reverse()
+    L.reverse()
+
+
+#Problem 7
+'''
+Paste your entire function, including the definition, in the box below. The function f will be automatically added to your code, do not paste it in the box. Do not leave any debugging print statements. Note that we ask you to write a function only -- you cannot rely on any variables defined outside your function for your code to work correctly.
+'''
+def dict_interdiff(d1, d2):
+    '''
+    d1, d2: dicts whose keys and values are integers
+    Returns a tuple of dictionaries according to the instructions above
+    '''
+    # Your code here
+    d11={}
+    d12 = {}
+    d1_keys = list(d1.keys())
+    d2_keys = list(d2.keys())
+    for i in d1_keys:
+        if i in d2:
+            d11[i] = f(d1[i], d2[i])
+        else:
+            d12[i] = d1[i]
+    
+    for i in d2_keys:
+        if not(i in d1) and not(i in d12):
+            d12[i] = d2[i]
+    return (d11,d12)
+
+
+#Problem 8
+# Paste your function here
+def applyF_filterG(L, f, g):
+    """
+    Assumes L is a list of integers
+    Assume functions f and g are defined for you. 
+    f takes in an integer, applies a function, returns another integer 
+    g takes in an integer, applies a Boolean function, 
+        returns either True or False
+    Mutates L such that, for each element i originally in L, L contains  
+        i if g(f(i)) returns True, and no other elements
+    Returns the largest element in the mutated L or -1 if the list is empty
+    """
+    # Your code here
+    
+    #checking each element of L
+    checker = list(L)
+    for i in checker:
+        if not(g(f(i))):
+            L.remove(i)
+    if len(L) == 0:
+        return -1
+    else:
+        return (max(L))
+
+
+#Problem 9
+def flatten(aList):
+    ''' 
+    aList: a list 
+    Returns a copy of aList, which is a flattened version of aList 
+    '''
+    final = []
+    for i in range (len(aList)):
+        if type(aList[i]) != list:
+            final.append(aList[i])
+        else:
+            final+=(flat(aList[i], final, len(aList[i])))
+    aList = final
+    for i in (final):
+        if type(i) == list:
+            flatten(aList)
+    return final
+
+def flat(L, fin, n):
+    finals = []
+    for i in range(n):
+        if type(L[i]) != list:
+            finals.append(L[i])
+        else:
+            finals+=(flat(L[i], finals, len(L[i])))
+    return finals
