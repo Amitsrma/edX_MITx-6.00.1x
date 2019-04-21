@@ -1,0 +1,174 @@
+'''
+Problem 3
+10.0/10.0 points (graded)
+Numbers in Mandarin follow 3 simple rules.
+
+There are words for each of the digits from 0 to 10.
+For numbers 11-19, the number is pronounced as "ten digit", so for example, 16 would be pronounced (using Mandarin) as "ten six".
+For numbers between 20 and 99, the number is pronounced as “digit ten digit”, so for example, 37 would be pronounced (using Mandarin) as "three ten seven". If the digit is a zero, it is not included.
+'''
+# Paste your function here
+def convert_to_mandarin(us_num):
+    '''
+    us_num, a string representing a US number 0 to 99
+    returns the string mandarin representation of us_num
+    '''
+    # FILL IN YOUR CODE HERE
+    trans = {'0':'ling', '1':'yi', '2':'er', '3':'san', '4': 'si', '5':'wu', '6':'liu', '7':'qi', '8':'ba', '9':'jiu', '10': 'shi'}
+    
+    #check if the us_number given is between 0 and 10 inclusive
+    if 0<= int(us_num) <= 10:
+        return trans[us_num]
+    elif int(us_num)%10 == 0:
+        return trans[str(int(us_num)//10)]+' '+trans['10']
+    elif int(us_num) > 10 and int(us_num)<20:
+        return trans['10']+' '+trans[str(int(us_num)%10)]
+    else:
+        return trans[str(int(us_num)//10)]+' '+trans['10']+' '+trans[str(int(us_num)%10)]
+
+
+'''
+Problem 4
+20.0/20.0 points (graded)
+You are given the following definitions:
+
+A run of monotonically increasing numbers means that a number at position k+1 in the sequence is greater than or equal to the number at position k in the sequence.
+A run of monotonically decreasing numbers means that a number at position k+1 in the sequence is less than or equal to the number at position k in the sequence.
+Implement a function that meets the specifications below.
+
+For example:
+
+If L = [10, 4, 3, 8, 3, 4, 5, 7, 7, 2] then the longest run of monotonically increasing numbers in L is [3, 4, 5, 7, 7] and the longest run of monotonically decreasing numbers in L is [10, 4, 3]. Your function should return the value 26 because the longest run of monotonically increasing integers is longer than the longest run of monotonically decreasing numbers.
+If L = [5, 4, 10] then the longest run of monotonically increasing numbers in L is [4, 10] and the longest run of monotonically decreasing numbers in L is [5, 4]. Your function should return the value 9 because the longest run of monotonically decreasing integers occurs before the longest run of monotonically increasing numbers.
+'''
+def longest_run(L):
+    """
+    Assumes L is a list of integers containing at least 2 elements.
+    Finds the longest run of numbers in L, where the longest run can
+    either be monotonically increasing or monotonically decreasing. 
+    In case of a tie for the longest run, choose the longest run 
+    that occurs first.
+    Does not modify the list.
+    Returns the sum of the longest run. 
+    """
+    initial = 0
+    index = 0
+    prevcount = 0
+    countl, countg = 1,1
+    for i in range(len(L)-1):
+        if L[i] >= L[i+1]:
+            countl += 1
+            initial += 1
+            if countl > prevcount:
+                prevcount = countl
+                index = i - countl +1
+        else:
+            countl = 1
+        if L[i] <= L[i+1]:
+            countg += 1
+            initial += 1
+            if countg > prevcount:
+                prevcount = countg
+                index = i - countg +1
+        else:
+            countg = 1
+    out = 0
+    if initial == 0:
+        a = 0
+    else:
+        a = index +1
+    for i in range(a, index+prevcount+1):
+        out += L[i]
+    return out
+
+'''
+Problem 5
+15.0/15.0 points (graded)
+In this problem, you will implement a class according to the specifications in the template file usresident.py. The file contains a Person class similar to what you have seen in lecture and a USResident class (a subclass of Person). Person is already implemented for you and you will have to implement two methods of USResident.
+
+For example, the following code:
+
+a = USResident('Tim Beaver', 'citizen')
+print(a.getStatus())
+b = USResident('Tim Horton', 'non-resident')
+will print out:
+
+citizen
+## will show that a ValueError was raised at a particular line
+'''
+class USResident(Person):
+    """ 
+    A Person who resides in the US.
+    """
+    def __init__(self, name, status):
+        """ 
+        Initializes a Person object. A USResident object inherits 
+        from Person and has one additional attribute:
+        status: a string, one of "citizen", "legal_resident", "illegal_resident"
+        Raises a ValueError if status is not one of those 3 strings
+        """
+        #self.name = name
+        Person.__init__(self, name)
+        self.status = status
+        if not(self.status == "illegal_resident" or self.status == "legal_resident" \
+        or self.status == "citizen"):
+            raise ValueError
+        
+    def getStatus(self):
+        """
+        Returns the status
+        """
+        # Write your code here
+        if not(self.status == "illegal_resident" or self.status == "legal_resident" \
+        or self.status == "citizen"):
+            raise ValueError
+        return self.status
+
+
+#Problem 6-1
+# Paste your class here
+class ArrogantProfessor(Professor): 
+    def say(self, stuff): 
+        return self.name+' says: '+'It is obvious that ' + Person.say(self, stuff)
+        
+    def lecture(self, stuff):
+        return 'It is obvious that ' + Person.say(self, stuff)
+
+#Problem 6-2
+# Paste your class here
+class ArrogantProfessor(Professor): 
+    def say(self, stuff): 
+        return self.name+' says: '+'It is obvious that I believe that ' + Person.say(self, stuff)
+    
+    def lecture(self, stuff):
+        return 'It is obvious that I believe that ' + Person.say(self, stuff)
+
+#Problem 6-3
+class Professor(Lecturer): 
+    def say(self, stuff): 
+        return 'Prof. '+self.name + ' says: ' + self.lecture(stuff)
+
+
+'''
+Problem 7
+20.0/20.0 points (graded)
+Write a function called general_poly, that meets the specifications below.
+
+For example, general_poly([1, 2, 3, 4])(10) should evaluate to 1234 because 
+
+So in the example the function only takes one argument with general_poly([1, 2, 3, 4]) and it returns a function that you can apply to a value, in this case x = 10 with general_poly([1, 2, 3, 4])(10).
+'''
+def general_poly (L):
+    """ L, a list of numbers (n0, n1, n2, ... nk)
+    Returns a function, which when applied to a value x, returns the value 
+    n0 * x^k + n1 * x^(k-1) + ... nk * x^0 """
+
+    def summs(x):
+        summ = 0
+        n=len(L)-1
+        for j in range(len(L)):
+            summ += L[j] * x**n
+            n -= 1
+        return summ
+    return(summs)
+    
