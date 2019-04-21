@@ -1,0 +1,44 @@
+#problem 1
+mir=annualInterestRate/12.0 #monthly interest rate(MIR)
+for i in range (12):
+    unpaid = balance - monthlyPaymentRate * balance
+    balance = round((unpaid * (1+mir)),2)
+print('Remaining balance: '+str(balance))
+
+#problem 2
+#monthly interest rate
+mir = annualInterestRate/12.0
+#lets fix a equal monthly payment to some value
+emp = 10
+check_bal = balance
+while check_bal>0:
+    for i in range(12):
+        unpaid = round(check_bal,2) - emp
+        check_bal = unpaid + mir * unpaid
+    #print(check_bal)
+    if check_bal > 0: #if final balance is +ve, increase monthly payment
+        check_bal = balance
+        emp = emp + 10
+#print result
+print('Lowest payment = ', emp)
+
+#problem 3
+mir = annualInterestRate/12.0
+#lower bound
+lbou = balance / 12.0
+#upper bound
+ubou = (balance*(1+mir)**12)/12
+check_blc = balance
+while abs(round(check_blc,2))>0.01:
+    emp = (lbou+ubou)/2
+    for i in range (12):
+        unpaid = check_blc - emp
+        check_blc = unpaid + unpaid*mir
+    #check if the result is satisfactory
+    if check_blc > 0.01: #happens if emp is less than it should be and thus emp has to be increased so I increased the lower bound
+        lbou = emp
+        check_blc = balance
+    elif check_blc < -0.01: #happens if emp is more than it should be and thus emp has to be decreased so I decreased the upper bound
+        ubou = emp
+        check_blc = balance
+print('lowest payment = ', round(emp,2))
